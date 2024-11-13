@@ -105,10 +105,10 @@ bool SignUp::matchPassword(const QString &pass, const QString &cPass){
 void SignUp::on_signUpButton_clicked()
 {
     QString cPass;
-    userName=(SignUp::ui->userNameBox)->toPlainText();
-    email=(SignUp::ui->emailBox)->toPlainText();
-    password=(SignUp::ui->passBox)->toPlainText();
-    cPass=(SignUp::ui->cPassBox)->toPlainText();
+    userName=(SignUp::ui->userNameBox)->text();
+    email=(SignUp::ui->emailBox)->text();
+    password=(SignUp::ui->passBox)->text();
+    cPass=(SignUp::ui->cPassBox)->text();
     if(!checkEmpty(userName,email,password,cPass)){
         //do nothing
     }

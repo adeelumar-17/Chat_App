@@ -20,44 +20,6 @@
    <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTextEdit" name="idBox">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>155</y>
-      <width>180</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>181</width>
-      <height>31</height>
-     </size>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="placeholderText">
-     <string>Username or email</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="passwordBox">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>224</y>
-      <width>180</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(6, 6, 6);</string>
-    </property>
-    <property name="placeholderText">
-     <string>Password</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="loginButton">
     <property name="geometry">
      <rect>
@@ -80,7 +42,7 @@ background-color: rgb(0,0,0);</string>
     <property name="geometry">
      <rect>
       <x>273</x>
-      <y>131</y>
+      <y>146</y>
       <width>140</width>
       <height>20</height>
      </rect>
@@ -97,7 +59,7 @@ font-weight:bold;</string>
     <property name="geometry">
      <rect>
       <x>273</x>
-      <y>201</y>
+      <y>206</y>
       <width>140</width>
       <height>20</height>
      </rect>
@@ -147,6 +109,35 @@ color: rgb(5, 34, 166);</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QLineEdit" name="idBox">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>170</y>
+      <width>180</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 0);</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="passwordBox">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>230</y>
+      <width>180</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 0);</string>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::EchoMode::Password</enum>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -161,8 +152,6 @@ color: rgb(5, 34, 166);</string>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
-  <tabstop>idBox</tabstop>
-  <tabstop>passwordBox</tabstop>
   <tabstop>loginButton</tabstop>
  </tabstops>
  <resources/>

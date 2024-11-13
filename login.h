@@ -10,6 +10,7 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <QRegularExpression>
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class Login;
@@ -22,6 +23,7 @@ class Login : public QMainWindow
 
 public:
     Login(QWidget *parent = nullptr);
+    static QString userID;
     ~Login();
 
 private slots:
@@ -35,7 +37,6 @@ private slots:
 
 private:
     Ui::Login *ui;
-    QString userID;
     QString password;
 };
 #endif // LOGIN_H

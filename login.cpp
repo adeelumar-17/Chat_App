@@ -1,29 +1,27 @@
 #include "login.h"
 #include "signup.h"
+#include "mainwindow.h"
 #include "ui_login.h"
 #include "database.h"
-
+QString Login::userID = "";
 Login::Login(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::Login),
-    userID(""),
-    password("")
+    , ui(new Ui::Login)
 {
     ui->setupUi(this);
     installEventFilter(this);
 }
-
 Login::~Login()
 {
     delete ui;
 }
 void Login::openMainWin(){
     //create main window dynamically
-    QMainWindow *mainWindow=new QMainWindow();
+    MainWindow *mainWindow=new MainWindow();
     //show the main window
     mainWindow->show();
     //delete on close
-    connect(mainWindow,&QMainWindow::destroyed,mainWindow,&QObject::deleteLater);
+    connect(mainWindow,&MainWindow::destroyed,mainWindow,&QObject::deleteLater);
     //close login page
     this->close();
 
@@ -71,11 +69,11 @@ bool Login::isValidLogin(const QString &uid,const QString &password){
         qDebug() << "Error executing query:" << query.lastError().text();
         return false;
     }
-
     // If the user is found, compare the password
     if (query.next()) {
         QString storedPassword = query.value("password").toString(); // Get the stored password
-
+        //retreive current user's username
+        userID = query.value("username").toString();
         // Compare the input password with the stored password
         if (password == storedPassword) {
             qDebug() << "Login successful!";
@@ -106,8 +104,8 @@ bool Login::eventFilter(QObject *watched,QEvent *event){
 }
 void Login::on_loginButton_clicked()
 {
-    userID=(Login::ui->idBox)->toPlainText();
-    password=(Login::ui->passwordBox)->toPlainText();
+    userID=(Login::ui->idBox)->text();
+    password=(Login::ui->passwordBox)->text();
     if(!checkEmpty(userID,password)){
         //do nothing
     }

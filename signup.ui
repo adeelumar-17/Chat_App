@@ -17,43 +17,11 @@
    <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTextEdit" name="emailBox">
-    <property name="geometry">
-     <rect>
-      <x>287</x>
-      <y>211</y>
-      <width>180</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="placeholderText">
-     <string>Email</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="passBox">
-    <property name="geometry">
-     <rect>
-      <x>287</x>
-      <y>271</y>
-      <width>180</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="placeholderText">
-     <string>Password</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="passLabel">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>250</y>
+      <x>311</x>
+      <y>244</y>
       <width>140</width>
       <height>20</height>
      </rect>
@@ -69,8 +37,8 @@ font-weight:bold;</string>
    <widget class="QLabel" name="emailLabel">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>190</y>
+      <x>311</x>
+      <y>182</y>
       <width>140</width>
       <height>20</height>
      </rect>
@@ -86,8 +54,8 @@ font-weight:bold;</string>
    <widget class="QLabel" name="cPassLabel">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>310</y>
+      <x>311</x>
+      <y>309</y>
       <width>140</width>
       <height>20</height>
      </rect>
@@ -100,43 +68,11 @@ font-weight:bold;</string>
      <string/>
     </property>
    </widget>
-   <widget class="QTextEdit" name="userNameBox">
-    <property name="geometry">
-     <rect>
-      <x>287</x>
-      <y>151</y>
-      <width>180</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="placeholderText">
-     <string>Username</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="cPassBox">
-    <property name="geometry">
-     <rect>
-      <x>287</x>
-      <y>331</y>
-      <width>180</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color: rgb(0, 0, 0);</string>
-    </property>
-    <property name="placeholderText">
-     <string>Confirm Password</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="signUpButton">
     <property name="geometry">
      <rect>
-      <x>287</x>
-      <y>391</y>
+      <x>310</x>
+      <y>385</y>
       <width>80</width>
       <height>25</height>
      </rect>
@@ -144,7 +80,7 @@ font-weight:bold;</string>
     <property name="styleSheet">
      <string notr="true">color: rgb(255, 255, 255);
 font-weight:bold;
-background-color: rgb(8, 8, 8);</string>
+background-color: rgb(0, 0, 0);</string>
     </property>
     <property name="text">
      <string>Sign Up</string>
@@ -153,8 +89,8 @@ background-color: rgb(8, 8, 8);</string>
    <widget class="QLabel" name="userLabel">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>130</y>
+      <x>311</x>
+      <y>122</y>
       <width>140</width>
       <height>20</height>
      </rect>
@@ -165,6 +101,76 @@ font-weight:bold;</string>
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="userNameBox">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>145</y>
+      <width>180</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 0);</string>
+    </property>
+    <property name="placeholderText">
+     <string>Enter username</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="emailBox">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>204</y>
+      <width>180</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 0);</string>
+    </property>
+    <property name="placeholderText">
+     <string>Enter email</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="passBox">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>268</y>
+      <width>180</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 0);</string>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::EchoMode::Password</enum>
+    </property>
+    <property name="placeholderText">
+     <string>Enter password</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="cPassBox">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>333</y>
+      <width>180</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(0, 0, 0);</string>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::EchoMode::Password</enum>
+    </property>
+    <property name="placeholderText">
+     <string>Confirm password</string>
     </property>
    </widget>
   </widget>
