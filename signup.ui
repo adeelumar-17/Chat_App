@@ -54,8 +54,8 @@ font-weight:bold;</string>
    <widget class="QLabel" name="cPassLabel">
     <property name="geometry">
      <rect>
-      <x>311</x>
-      <y>309</y>
+      <x>310</x>
+      <y>310</y>
       <width>140</width>
       <height>20</height>
      </rect>
