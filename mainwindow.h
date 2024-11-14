@@ -37,8 +37,10 @@ private:
     QTcpServer *TCPServer; //for server functionality
     QList<QTcpSocket*> clientConnectionList;
     void setupDatabase();
+    QString formatMessage(const QString &sender, const QString &message);
     void appendMessage(const QString &message);
     void addNewClientConnection(QTcpSocket *socket);
+    void removeClient(QTcpSocket *socket);
 };
 
 #endif // MAINWINDOW_H
