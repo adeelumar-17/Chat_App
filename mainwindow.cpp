@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Connection to local host
     TCPSocket = new QTcpSocket(this);
-    TCPSocket->connectToHost(QHostAddress::LocalHost, 8080);
+    TCPSocket->connectToHost(QHostAddress::LocalHost, 8081);
     connect(TCPSocket, &QTcpSocket::readyRead, this, &MainWindow::readDataFromServer);
 
     if (TCPSocket->isOpen()) {

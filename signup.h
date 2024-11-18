@@ -23,6 +23,7 @@ private slots:
     void on_signUpButton_clicked();
     void openLogin();
     bool matchPassword(const QString &pass, const QString &cPass);
+    void storeData(const QString &uname, const QString &email, const QString &pass);
 
 private:
     Ui::SignUp *ui;

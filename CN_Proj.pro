@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     database.cpp \
+    hashutil.cpp \
     main.cpp \
     login.cpp \
     mainwindow.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
 
 HEADERS += \
     database.h \
+    hashutil.h \
     login.h \
     mainwindow.h \
     signup.h
