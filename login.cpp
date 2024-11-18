@@ -1,5 +1,6 @@
 #include "login.h"
 #include "signup.h"
+#include "hashutil.h"
 #include "mainwindow.h"
 #include "ui_login.h"
 #include "database.h"
@@ -72,10 +73,11 @@ bool Login::isValidLogin(const QString &uid,const QString &password){
     // If the user is found, compare the password
     if (query.next()) {
         QString storedPassword = query.value("password").toString(); // Get the stored password
+        QString hashedPassword=HashUtil::hashPassword(password);
         //retreive current user's username
         userID = query.value("username").toString();
         // Compare the input password with the stored password
-        if (password == storedPassword) {
+        if (hashedPassword == storedPassword) {
             qDebug() << "Login successful!";
             return true;
         } else {

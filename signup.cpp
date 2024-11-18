@@ -1,5 +1,7 @@
 #include "signup.h"
 #include "login.h"
+#include "hashutil.h"
+#include "database.h"
 #include "ui_signup.h"
 
 SignUp::SignUp(QWidget *parent)
@@ -102,6 +104,35 @@ bool SignUp::matchPassword(const QString &pass, const QString &cPass){
     }
 
 }
+
+void SignUp::storeData(const QString &uname, const QString &email, const QString &pass)
+{
+    // Assuming you have already established a connection to the database
+    QSqlDatabase db = QSqlDatabase::database();  // Get the existing connection to the database
+
+    if (!db.isOpen()) {
+        qDebug() << "Database is not open!";
+        return;  // Ensure the database is open before proceeding
+    }
+
+    // Prepare the SQL query to insert user data into the 'users' table
+    QSqlQuery query;
+    QString hashedPassword=HashUtil::hashPassword(pass);
+    // Use parameterized queries to prevent SQL injection
+    query.prepare("INSERT INTO users (username, email, password) VALUES (:uname, :email, :pass)");
+
+    // Bind the values to the placeholders
+    query.bindValue(":uname", uname);
+    query.bindValue(":email", email);
+    query.bindValue(":pass", hashedPassword);  // Assuming you have hashed the password already
+
+    // Execute the query
+    if (!query.exec()) {
+        qDebug() << "Error inserting data: " << query.lastError().text();
+    } else {
+        qDebug() << "User data inserted successfully!";
+    }
+}
 void SignUp::on_signUpButton_clicked()
 {
     QString cPass;
@@ -116,6 +147,7 @@ void SignUp::on_signUpButton_clicked()
         //do nothing
     }
     else{
+        storeData(userName,email,password);
         openLogin();
     }
 }
