@@ -1,6 +1,7 @@
 #include "login.h"
 #include "database.h"
 #include <QApplication>
+#include <QScreen>
 #include <QLocale>
 #include <QTranslator>
 
@@ -18,6 +19,18 @@ int main(int argc, char *argv[])
         }
     }
     Login w;
+
+   /* // Get the primary screen
+    QScreen *screen = QGuiApplication::primaryScreen();
+    if (screen) {
+        QRect screenGeometry = screen->availableGeometry();
+        int width = screenGeometry.width();
+        int height = screenGeometry.height();
+
+        // Set the window size to fit the screen
+        w.resize(width, height);
+    }*/
+
     w.show();
     Database db;
     db.createUserTable();

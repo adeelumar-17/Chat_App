@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
+#include <QKeyEvent>
 namespace Ui {
 class SignUp;
 }
@@ -24,6 +25,7 @@ private slots:
     void openLogin();
     bool matchPassword(const QString &pass, const QString &cPass);
     void storeData(const QString &uname, const QString &email, const QString &pass);
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     Ui::SignUp *ui;

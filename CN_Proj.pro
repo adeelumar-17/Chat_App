@@ -37,3 +37,11 @@ CONFIG += embed_translations
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    Resources/chat_bg.qrc
+
+DISTFILES += \
+    Resources/file.png \
+    Resources/image.png \
+    Resources/pdf.png

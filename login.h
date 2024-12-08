@@ -34,6 +34,7 @@ private slots:
     bool isValidLogin(const QString &uid,const QString &password);
     void openSignUp();
     void on_signUpButton_clicked();
+    void keyPressEvent(QKeyEvent *event);
 
 private:
     Ui::Login *ui;

@@ -9,9 +9,17 @@ SignUp::SignUp(QWidget *parent)
     , ui(new Ui::SignUp)
 {
     ui->setupUi(this);
+    ui->userNameBox->setFocus();
     installEventFilter(this);
 }
-
+void SignUp::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key()==Qt::Key_Return || event->key()==Qt::Key_Enter){
+        if(ui->userNameBox->hasFocus() || ui->emailBox->hasFocus() || ui->passBox->hasFocus() || ui->cPassBox->hasFocus()){
+            ui->signUpButton->click();
+        }
+    }
+}
 SignUp::~SignUp()
 {
     delete ui;
@@ -133,6 +141,7 @@ void SignUp::storeData(const QString &uname, const QString &email, const QString
         qDebug() << "User data inserted successfully!";
     }
 }
+
 void SignUp::on_signUpButton_clicked()
 {
     QString cPass;

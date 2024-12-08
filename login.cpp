@@ -10,7 +10,16 @@ Login::Login(QWidget *parent)
     , ui(new Ui::Login)
 {
     ui->setupUi(this);
+    ui->idBox->setFocus();
     installEventFilter(this);
+}
+void Login::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key()==Qt::Key_Return || event->key()==Qt::Key_Enter){
+        if(ui->idBox->hasFocus() || ui->passwordBox->hasFocus()){
+            ui->loginButton->click();
+        }
+    }
 }
 Login::~Login()
 {

@@ -20,6 +20,9 @@
    <string notr="true">background-color: rgb(255, 255, 255);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
+   <property name="autoFillBackground">
+    <bool>true</bool>
+   </property>
    <widget class="QPushButton" name="loginButton">
     <property name="geometry">
      <rect>

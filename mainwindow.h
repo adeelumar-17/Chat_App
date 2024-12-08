@@ -2,15 +2,17 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QtNetwork/QTcpSocket>    //add necessary network libraries
-#include <QtNetwork/QTcpServer>
-#include <QtNetwork/QHostAddress>
+#include <QtNetwork> //add necessary network libraries
+#include <QtCore>
+#include <QtGui>
+#include <QtWidgets>
 #include <QList>
 #include <QMessageBox>
 #include <QDebug>
 #include <QString>
 #include <QByteArray>
 #include <QDataStream>
+#include <QLayout>
 #include "login.h"
 namespace Ui {
 class MainWindow;
@@ -27,20 +29,27 @@ public:
 private slots:
     void on_sendMsgButton_clicked();
     void readDataFromServer();
-    void readDataFromSocket();
+    void readTextSocket();
+    void readFileSocket();
     void newConnection();
+    void keyPressEvent(QKeyEvent *event);
+    void on_attachFile_clicked();
 
 private:
     Ui::MainWindow *ui;
     QString currentUser;
     QTcpSocket *TCPSocket; //tcp socket for reliable connections
     QTcpServer *TCPServer; //for server functionality
+    QString selectedFilePath;
     QList<QTcpSocket*> clientConnectionList;
     void setupDatabase();
     QString formatMessage(const QString &sender, const QString &message);
     void appendMessage(const QString &message);
+    void appendMessage(const QString &message, bool isSentByUser);
+    void appendMessage(const QString &message,const QString &fileName, bool isSentByUser);
     void addNewClientConnection(QTcpSocket *socket);
     void removeClient(QTcpSocket *socket);
+    void sendFile(QTcpSocket* socket, QString fileName);
 };
 
 #endif // MAINWINDOW_H
