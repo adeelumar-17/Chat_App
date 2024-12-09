@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->msgData->setFocus();
+
     // Implementation of server
     TCPServer = new QTcpServer(this);
     if (TCPServer->listen(QHostAddress::Any, 8080)) {
@@ -35,17 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
     } else {
         qDebug() << "Server failed to start";
     }
-
-    // Connection to local host
-    TCPSocket = new QTcpSocket(this);
-    TCPSocket->connectToHost(QHostAddress::LocalHost, 8081);
-    connect(TCPSocket, &QTcpSocket::readyRead, this, &MainWindow::readDataFromServer);
-    if (TCPSocket->isOpen()) {
-        qDebug() << "Connected to the server";
-    } else {
-        qDebug() << "Couldn't connect to the server";
-    }
 }
+
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     if ((event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) && event->modifiers()==Qt::ShiftModifier) {
@@ -390,4 +382,24 @@ void MainWindow::on_attachFile_clicked()
 }
 
 
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    // List of IP addresses of other devices
+    QStringList deviceIPs = {"127.0.0.1"};
+
+    // Loop through each IP and attempt to connect
+    for (const QString &ip : deviceIPs) {
+        TCPSocket = new QTcpSocket(this);
+        TCPSocket->connectToHost(QHostAddress(ip), 8080);
+        connect(TCPSocket, &QTcpSocket::readyRead, this, &MainWindow::readDataFromServer);
+
+        if (TCPSocket->isOpen()) {
+            qDebug() << "Connected to" << ip;
+        } else {
+            qDebug() << "Couldn't connect to" << ip;
+        }
+    }
+}
 
