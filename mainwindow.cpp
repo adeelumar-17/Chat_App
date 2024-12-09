@@ -6,8 +6,13 @@ void MainWindow::setupDatabase() {
     QString dbPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/user_credentials.db";
     QDir().mkpath(QFileInfo(dbPath).path());  // Ensure directory exists
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setDatabaseName(dbPath);
+    QSqlDatabase db;
+    if (QSqlDatabase::contains("qt_sql_default_connection")) {
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    } else {
+        db = QSqlDatabase::addDatabase("QSQLITE");
+        db.setDatabaseName(dbPath);
+    }
 
     if (!db.open()) {
         qDebug() << "Error: Unable to open the database!" << db.lastError().text();
@@ -35,7 +40,6 @@ MainWindow::MainWindow(QWidget *parent)
     TCPSocket = new QTcpSocket(this);
     TCPSocket->connectToHost(QHostAddress::LocalHost, 8081);
     connect(TCPSocket, &QTcpSocket::readyRead, this, &MainWindow::readDataFromServer);
-
     if (TCPSocket->isOpen()) {
         qDebug() << "Connected to the server";
     } else {
@@ -65,14 +69,15 @@ void MainWindow::appendMessage(const QString &message, bool isSentByUser) {
     // Define the alignment style based on the sender
     QString alignmentStyle = isSentByUser ? "text-align: right;" : "text-align: left;";
 
-    // Wrap the message in a div to control alignment
+    // Wrap the message in a <div> tag (instead of <p>) for better block-level formatting
     QString html = QString(
-                       "<div style='%1; margin: 5px;'>"
+                       "<div style='%1; margin: 10px; padding: 5px; display: block; max-width: 40%; word-wrap: break-word;'>"
                        "%2"
+                       "<div style='height: 10px;'><br></div>"
                        "</div>").arg(alignmentStyle).arg(message);
 
-    // Append the styled message to QTextEdit
-    ui->chatHistory->append(html);
+    // Append the styled message to QTextEdit using insertHtml to avoid append overwriting
+    ui->chatHistory->insertHtml(html);  // Use insertHtml for better HTML control
 }
 
 void MainWindow::appendMessage(const QString &message, const QString &fileName, bool isSentByUser) {
@@ -94,33 +99,17 @@ void MainWindow::appendMessage(const QString &message, const QString &fileName, 
     // Define the alignment style based on the sender
     QString alignmentStyle = isSentByUser ? "text-align: right;" : "text-align: left;";
 
-    // Construct the HTML block for the message (if provided)
-   /* QString messageHtml;
-    if (!message.isEmpty()) {
-        messageHtml = QString("<div style='%1; margin: 5px;'>%2</div>")
-        .arg(alignmentStyle, message);
-    }*/
-
-    // Construct the HTML block for the file attachment
+    // Construct the HTML block for the file attachment inside a <div> tag for proper block-level formatting
     QString fileHtml = QString(
-                           "<div style='%1; margin: 5px;'>"
-                           "  <div style='text-align: right;'>"
-                           "    <img src='%2' width='30' height='30'/>"
-                           "  </div>"
-                           "  <div style='%1; margin-top: 2px;'>"
-                           "    %3"
-                           "  </div>"
-                           "</div>")
-                           .arg(alignmentStyle, iconPath, message);
+                           "<div style='%1; margin: 10px; padding: 5px; display: block;'>"
+                           "  <img src='%2' width='30' height='30'/>"
+                           "  <br>"  // Add a break to separate the icon and the message text
+                           "  %3"
+                           "<div style='height: 10px;'><br></div>"
+                           "</div>").arg(alignmentStyle, iconPath, message);
 
-
-    // Append the message and file attachment to QTextEdit
-   /* if (!messageHtml.isEmpty()) {
-        ui->chatHistory->insertHtml(messageHtml);
-    }
-    ui->chatHistory->insertHtml(fileHtml);
-    ui->chatHistory->insertHtml("<br>");*/
-    ui->chatHistory->append(fileHtml);
+    // Append the message and file attachment to QTextEdit using insertHtml
+    ui->chatHistory->insertHtml(fileHtml);  // Use insertHtml for better formatting
 }
 
 
@@ -200,7 +189,14 @@ void MainWindow::readDataFromServer()
     if (TCPSocket && TCPSocket->isOpen()) {
         QByteArray Data_From_Server = TCPSocket->readAll();
         QString serverMsg = QString::fromUtf8(Data_From_Server);
-        appendMessage(serverMsg,false);
+        if (serverMsg.contains("filename")) {
+            // If the data starts with "FILE:", it's a file transfer, so call readFileSocket
+            readFileSocket(Data_From_Server);
+        }
+        else {
+            qDebug() << "Received non-file data:" << serverMsg;
+            appendMessage(serverMsg,false);
+        }
     }
 }
 
@@ -212,34 +208,84 @@ void MainWindow::readTextSocket()
     appendMessage(message,false);
 }
 
-void MainWindow::readFileSocket()
+void MainWindow::readFileSocket(const QByteArray &dataBuffer)
 {
-    QTcpSocket *socket=reinterpret_cast<QTcpSocket*>(sender());
+    QByteArray fileData = dataBuffer;
 
-    QByteArray dataBuffer;
-
-    QDataStream socketStream;
-    socketStream.setVersion(QDataStream::Qt_5_15);
-
-    socketStream.startTransaction();
-    socketStream>>dataBuffer;
-    if(socketStream.commitTransaction()==false){
+    // Ensure data is at least 5 bytes for "FILE:" prefix removal
+    if (fileData.size() < 5) {
+        qDebug() << "Invalid data size received.";
         return;
     }
-    //get file meta data
-    QString headerData=dataBuffer.mid(0,128);     //get header data
-    QString fileName=headerData.split(",")[0].split(":")[1];  //file full name
-    QString fileExt=fileName.split(":")[1]; //file extension
-    QString fileSize=headerData.split(",")[1].split(":")[1]; //get file size
 
-    dataBuffer=dataBuffer.mid(128);  //get file data
-    QString saveFilePath=QCoreApplication::applicationDirPath()+"/"+fileName;
-    QFile file(saveFilePath);
-    if(file.open(QIODevice::WriteOnly)){
-        file.write(dataBuffer);
-        file.close();
+    fileData.remove(0, 5); // Remove the "FILE:" prefix
+
+    // Validate and parse the header data (128 bytes assumed)
+    if (fileData.size() < 128) {
+        qDebug() << "Header size is less than expected, aborting.";
+        return;
     }
+
+    QString headerData = QString::fromUtf8(fileData.mid(0, 128)); // Read header as UTF-8 string
+    if (!headerData.contains(",") || !headerData.contains(":")) {
+        qDebug() << "Header format is invalid, aborting.";
+        return;
+    }
+
+    QString fileName = headerData.split(",")[0].split(":")[1].trimmed(); // Extract file name
+    QString fileSizeStr = headerData.split(",")[1].split(":")[1].trimmed(); // Extract file size
+    bool isFileSizeValid;
+    qint64 fileSize = fileSizeStr.toLongLong(&isFileSizeValid);
+    if (!isFileSizeValid || fileSize <= 0 || fileSize > 10 * 1024 * 1024) { // Validate file size
+        qDebug() << "Invalid file size, aborting.";
+        return;
+    }
+
+    // Show file save dialog to select custom path
+    QString selectedDir = QFileDialog::getExistingDirectory(
+        this,
+        tr("Select Save Directory"),
+        QCoreApplication::applicationDirPath(),
+        QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    qDebug() << "this is where dialog is shown";
+    if (selectedDir.isEmpty()) {
+        qDebug() << "No directory selected. File saving aborted.";
+        return;
+    }
+
+    QString saveFilePath = selectedDir + "/" + fileName;
+    QFileInfo fileInfo(saveFilePath);
+    qDebug() << saveFilePath;
+
+    // Handle potential file overwriting
+    if (fileInfo.exists()) {
+        qDebug() << "File with the same name already exists. Appending unique ID.";
+        QString uniqueSuffix = QString::number(QDateTime::currentMSecsSinceEpoch());
+        saveFilePath = selectedDir + "/" + fileInfo.baseName() + "_" + uniqueSuffix + "." + fileInfo.suffix();
+    }
+
+    // Remove header data and handle the actual file content
+    fileData = fileData.mid(128); // Skip the header
+
+    QFile file(saveFilePath);
+
+    if (!file.open(QIODevice::WriteOnly)) {
+        qDebug() << "Failed to open file for writing. Path:" << saveFilePath;
+        return;
+    }
+
+    if (file.write(fileData) != fileData.size()) { // Write data and validate
+        qDebug() << "Error occurred while writing the file.";
+    } else {
+        qDebug() << "File saved successfully at:" << saveFilePath;
+    }
+
+    file.close();
 }
+
+
+
+
 
 void MainWindow::newConnection()
 {

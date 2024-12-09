@@ -30,7 +30,7 @@ private slots:
     void on_sendMsgButton_clicked();
     void readDataFromServer();
     void readTextSocket();
-    void readFileSocket();
+    void readFileSocket(const QByteArray &dataBuffer);
     void newConnection();
     void keyPressEvent(QKeyEvent *event);
     void on_attachFile_clicked();
